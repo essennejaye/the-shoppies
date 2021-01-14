@@ -15,11 +15,12 @@ input MovieInput {
 }
 
 type Query {
-    movies: Movies
+    movies: [Movies]
 }
 
 type Mutation {
     saveMovie(movieData: MovieInput!): Movies
+    removeMovie(movieID: String!): Movies
 }
 `;
 
