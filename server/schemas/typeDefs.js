@@ -4,13 +4,7 @@ const typeDefs = gql `
 type Movies {
     _id: ID!
     title: String!
-    year: Int!
-    movieID: String!
-}
-input MovieInput {
-    _id: ID!
-    title: String!
-    year: Int!
+    year: String!
     movieID: String!
 }
 
@@ -19,8 +13,8 @@ type Query {
 }
 
 type Mutation {
-    saveMovie(movieData: MovieInput!): Movies
-    removeMovie(movieID: String!): Movies
+    saveMovie(title: String!, year: String!, movieID: String!): Movies
+    removeMovie(_id: ID!): Movies
 }
 `;
 

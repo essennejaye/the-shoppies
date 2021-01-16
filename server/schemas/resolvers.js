@@ -9,18 +9,15 @@ const resolvers = {
   },
 
   Mutation: {
-    saveMovie: async (parent, { movieData }) => {
-      const updatedMovies = await Movies.updateMany(
-        { $push: { savedMovies: movieData } },
-        { new: true }
-      );
-      return updatedMovies;
+    saveMovie: async (parent, args) => {
+      const newMovie = await Movies.create(args);
+      return newMovie;
     },
-    removeMovie: async (parent, { movieID }) => {
-      const updatedMovies = await Movies.findOneAndUpdate(
-        { $pull: { savedMovies: { movieID } } },
-        { new: true }
-      );
+
+    removeMovie: async (parent, { _id }) => {
+      const updatedMovies = await Movies.findOneAndDelete({
+        _id: { _id },
+      });
       return updatedMovies;
     },
   },

@@ -7,12 +7,13 @@ const moviesSchema = new Schema(
             required: true
         },
         year: {
-            type: Number,
+            type: String,
             required: true
         },
         movieID: {
             type: String,
-            required: true
+            required: true,
+            unique: true
         }
     }
 );
