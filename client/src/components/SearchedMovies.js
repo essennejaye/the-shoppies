@@ -13,7 +13,6 @@ import { useMutation } from "@apollo/react-hooks";
 import { SAVE_MOVIE } from "../utils/mutations";
 import { saveMovieIds, getSavedMovieIds } from "../utils/localStorage";
 import SavedMovies from "./SavedMovies";
-// require("dotenv").config();
 
 const SearchedMovies = () => {
   // create states for holding returned fetch results, search input field and saved movies
@@ -23,14 +22,15 @@ const SearchedMovies = () => {
 
   const [savedMovieIds, setSavedMovieIds] = useState(getSavedMovieIds());
 
-  const [handleClickState, setHandleClickState] = useState(false);
+  // const [handleClickState, setHandleClickState] = useState(false);
 
   const [saveMovie, { error }] = useMutation(SAVE_MOVIE);
 
+  // is this necassary?
   useEffect(() => {
-    if (savedMovieIds) {
-      setHandleClickState(true);
-    }
+    // if (savedMovieIds) {
+    //   setHandleClickState(true);
+    // }
     saveMovieIds(savedMovieIds);
   }, [savedMovieIds]);
 
@@ -44,8 +44,7 @@ const SearchedMovies = () => {
     if (!searchInput) {
       return false;
     }
-    // const key = process.env.REACT_APP_API_KEY;
-    const key = "9a8b973f";
+    const key = process.env.REACT_APP_API_KEY;
     try {
       const response = await fetch(
         `http://www.omdbapi.com/?s=${searchInput}&apikey=${key}`
@@ -70,9 +69,15 @@ const SearchedMovies = () => {
   };
 
   const handleSaveMovie = async (movieID) => {
+    if (savedMovieIds.length >= 5) {
+      alert("You can only have 5 nominees!");
+      return;
+    }
+
     const movieToSave = searchedMovies.find(
       (movie) => movie.movieID === movieID
     );
+
     try {
       await saveMovie({
         variables: {
@@ -118,7 +123,7 @@ const SearchedMovies = () => {
         <Container className="result-container">
           <h2>
             {searchedMovies.length
-              ? `Results for ${searchInput}`
+              ? `Results for '${searchInput}'`
               : `No results found!`}
           </h2>
           <Card>
@@ -135,7 +140,7 @@ const SearchedMovies = () => {
                       onClick={() => {
                         handleSaveMovie(movie.movieID);
                       }}
-                      variant="success"
+                      variant="primary"
                     >
                       Nominate
                     </Button>
@@ -145,7 +150,12 @@ const SearchedMovies = () => {
             </ListGroup>
           </Card>
         </Container>
-        {handleClickState ? <SavedMovies newMovieIds={savedMovieIds} /> : null}
+        {/* {handleClickState ? ( */}
+          <SavedMovies
+            newMovieIds={savedMovieIds}
+            setSavedMovieIds={setSavedMovieIds}
+          />
+        {/* ) : null} */}
       </section>
       {error && <h2>Oops!</h2>}
     </>

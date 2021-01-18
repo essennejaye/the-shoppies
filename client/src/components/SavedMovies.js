@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   Button,
@@ -9,28 +9,24 @@ import {
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { REMOVE_MOVIE } from "../utils/mutations";
 import { QUERY_MOVIES } from "../utils/queries";
-import { removeMovieId } from "../utils/localStorage";
+import { getSavedMovieIds, removeMovieId } from "../utils/localStorage";
 
-// function arrayEquals(a, b) {
-//     let areArrays = Array.isArray(a) && Array.isArray(b);
-//     let sameLength = a.length === b.length;
-//     let ev = a.every((val, index) => val === b[index]);
-//     return areArrays && sameLength && ev;
-//   }
+// const SavedMovies = (newMovieIdsObj ) => {
 
-const SavedMovies = (newMovieIdsObj) => {
+const SavedMovies = (props) => {
   const { loading, data, refetch } = useQuery(QUERY_MOVIES);
-  const [removeMovie] = useMutation(REMOVE_MOVIE);
-  //   const [movieIds, setMovieIds] = useState([]);
 
-  let newMovieIds = newMovieIdsObj["newMovieIds"];
+  const [removeMovie] = useMutation(REMOVE_MOVIE, {
+    refetchQueries: [{ query: QUERY_MOVIES }],
+  });
+
+  //   let newMovieIds = props.newMovieIdsObj["newMovieIds"];
+  let newMovieIds = props.newMovieIds;
   useEffect(() => {
     if (!loading) {
       refetch();
     }
-    // if (!arrayEquals(movieIds, newMovieIds)) {
-    //     setMovieIds(newMovieIds);
-    // }
+    // return loading;
   }, [newMovieIds, loading, refetch]);
 
   const movieData = data?.movies || {};
@@ -42,6 +38,7 @@ const SavedMovies = (newMovieIdsObj) => {
       });
       // also remove from localStorage
       removeMovieId(movieID);
+      return;
     } catch (err) {
       console.error(err);
     }
@@ -49,13 +46,13 @@ const SavedMovies = (newMovieIdsObj) => {
 
   if (loading) {
     return <h2>Loading...</h2>;
-  }
+  };
 
   return (
     <Container className="nominee-container">
       <h2>
         {movieData.length
-          ? `the '${movieData.length}' Nominees are:`
+          ? `the '${movieData.length}' ${movieData.length === 1 ? ' Nominee is:' : 'Nominees are:'}`
           : `Nominees Please!`}
       </h2>
       <Card>
@@ -66,14 +63,18 @@ const SavedMovies = (newMovieIdsObj) => {
                 {`Title: ${movie.title} (${movie.year})`}
                 <Button
                   className="btn-block, btn-info"
-                  onClick={() => handleRemoveMovie(movie._id, movie.movieID)}
-                  variant="success"
+                  onClick={async () => {
+                    await (handleRemoveMovie(movie._id, movie.movieID));
+                    props.setSavedMovieIds(getSavedMovieIds());
+                  }}
+                  variant="outline-danger"
                 >
                   Remove
                 </Button>
               </ListGroupItem>
             );
           })}
+          <></>
         </ListGroup>
       </Card>
     </Container>

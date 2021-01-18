@@ -19,3 +19,7 @@ h6 {
   display: flex;
   justify-content: space-between;
 }
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+}
