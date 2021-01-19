@@ -11,8 +11,6 @@ import { REMOVE_MOVIE } from "../utils/mutations";
 import { QUERY_MOVIES } from "../utils/queries";
 import { getSavedMovieIds, removeMovieId } from "../utils/localStorage";
 
-// const SavedMovies = (newMovieIdsObj ) => {
-
 const SavedMovies = (props) => {
   const { loading, data, refetch } = useQuery(QUERY_MOVIES);
 
@@ -20,13 +18,11 @@ const SavedMovies = (props) => {
     refetchQueries: [{ query: QUERY_MOVIES }],
   });
 
-  //   let newMovieIds = props.newMovieIdsObj["newMovieIds"];
   let newMovieIds = props.newMovieIds;
   useEffect(() => {
     if (!loading) {
       refetch();
     }
-    // return loading;
   }, [newMovieIds, loading, refetch]);
 
   const movieData = data?.movies || {};
@@ -49,6 +45,8 @@ const SavedMovies = (props) => {
   };
 
   return (
+    <>
+    {!movieData.length ? null : 
     <Container className="nominee-container">
       <h2>
         {movieData.length
@@ -65,6 +63,7 @@ const SavedMovies = (props) => {
                   className="btn-block, btn-info"
                   onClick={async () => {
                     await (handleRemoveMovie(movie._id, movie.movieID));
+                    // pass saved movies back to parent to re-enable buttons
                     props.setSavedMovieIds(getSavedMovieIds());
                   }}
                   variant="outline-danger"
@@ -78,6 +77,8 @@ const SavedMovies = (props) => {
         </ListGroup>
       </Card>
     </Container>
+    }
+    </>
   );
 };
 

@@ -17,46 +17,42 @@ import SavedMovies from "./SavedMovies";
 const SearchedMovies = () => {
   // create states for holding returned fetch results, search input field and saved movies
   const [searchedMovies, setSearchedMovies] = useState([]);
-
   const [searchInput, setSearchInput] = useState("");
-
   const [savedMovieIds, setSavedMovieIds] = useState(getSavedMovieIds());
-
-  // const [handleClickState, setHandleClickState] = useState(false);
 
   const [saveMovie, { error }] = useMutation(SAVE_MOVIE);
 
-  // is this necassary?
+  // save movieid to local storage for persistence
   useEffect(() => {
-    // if (savedMovieIds) {
-    //   setHandleClickState(true);
-    // }
     saveMovieIds(savedMovieIds);
   }, [savedMovieIds]);
-
-  //   const handleClick = () => {
-  //     setHandleClickState(true);
-  //   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     if (!searchInput) {
+      alert("You must enter a search term!");
       return false;
     }
     const key = process.env.REACT_APP_API_KEY;
+
     try {
       const response = await fetch(
         `http://www.omdbapi.com/?s=${searchInput}&apikey=${key}`
       );
-
       if (!response.ok) {
         throw new Error("Oops, something went wrong");
       }
 
       const items = await response.json();
-      const movies = items.Search;
+      
+      if (!items || !items['Search']) {
+        alert("No results for that search term");
+        setSearchInput('');
+        return false;
+      }
 
+      const movies = items.Search;
       const movieData = movies.map((movie) => ({
         movieID: movie.imdbID,
         title: movie.Title,
@@ -92,6 +88,7 @@ const SearchedMovies = () => {
     setSavedMovieIds([...savedMovieIds, movieToSave.movieID]);
   };
 
+  // const newLocal = searchedMovies.length || savedMovieIds.length;
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
@@ -119,44 +116,43 @@ const SearchedMovies = () => {
         </Container>
       </Jumbotron>
 
-      <section className="shoppie-container">
-        <Container className="result-container">
-          <h2>
-            {searchedMovies.length
-              ? `Results for '${searchInput}'`
-              : `No results found!`}
-          </h2>
-          <Card>
-            <ListGroup variant="flush">
-              {searchedMovies.map((movie) => {
-                return (
-                  <ListGroupItem key={movie.movieID}>
-                    {`Title: ${movie.title} (${movie.year})`}
-                    <Button
-                      disabled={savedMovieIds?.some(
-                        (savedID) => savedID === movie.movieID
-                      )}
-                      className="btn-block, btn-info"
-                      onClick={() => {
-                        handleSaveMovie(movie.movieID);
-                      }}
-                      variant="primary"
-                    >
-                      Nominate
-                    </Button>
-                  </ListGroupItem>
-                );
-              })}
-            </ListGroup>
-          </Card>
-        </Container>
-        {/* {handleClickState ? ( */}
+      {(!searchedMovies.length ) ? null :
+        <section className="shoppie-container">
+          <Container className="result-container">
+          <h2>Results for '{searchInput}'</h2>
+            <Card>
+              <ListGroup variant="flush">
+                {searchedMovies.map((movie) => {
+                  return (
+                    <ListGroupItem key={movie.movieID}>
+                      {`Title: ${movie.title} (${movie.year})`}
+                      <Button
+                        disabled={savedMovieIds?.some(
+                          (savedID) => savedID === movie.movieID
+                        )}
+                        className="btn-block, btn-info"
+                        onClick={() => {
+                          handleSaveMovie(movie.movieID);
+                        }}
+                        variant="primary"
+                      >
+                        Nominate
+                      </Button>
+                    </ListGroupItem>
+                  );
+                })}
+              </ListGroup>
+            </Card>
+          </Container>
+          
+          {/* pass setter function as prop to child so state can be updated from child */}
           <SavedMovies
             newMovieIds={savedMovieIds}
             setSavedMovieIds={setSavedMovieIds}
           />
-        {/* ) : null} */}
-      </section>
+        </section>
+      }
+      {/* need better error handling */}
       {error && <h2>Oops!</h2>}
     </>
   );
