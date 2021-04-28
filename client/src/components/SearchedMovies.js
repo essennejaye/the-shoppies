@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Jumbotron,
   Container,
@@ -7,35 +7,31 @@ import {
   Card,
   Col,
   ListGroupItem,
-  ListGroup,
+  ListGroup
 } from "react-bootstrap";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_MOVIE } from "../utils/mutations";
 import { saveMovieIds, getSavedMovieIds } from "../utils/localStorage";
 import SavedMovies from "./SavedMovies";
+import AlertModal from "./AlertModal";
 
 const SearchedMovies = () => {
-  // create states for holding returned fetch results, search input field and saved movies
+  //  create states for holding returned fetch results, search input field and saved movies
   const [searchedMovies, setSearchedMovies] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [savedMovieIds, setSavedMovieIds] = useState(getSavedMovieIds());
-
   const [saveMovie, { error }] = useMutation(SAVE_MOVIE);
-
-  // save movieid to local storage for persistence
-  useEffect(() => {
-    saveMovieIds(savedMovieIds);
-  }, [savedMovieIds]);
+  const [show, setShow] = useState(false);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     if (!searchInput) {
-      alert("You must enter a search term!");
+      setShow(true);
       return false;
     }
-    const key = process.env.REACT_APP_API_KEY;
 
+    const key = process.env.REACT_APP_API_KEY;
     try {
       const response = await fetch(
         `http://www.omdbapi.com/?s=${searchInput}&apikey=${key}`
@@ -45,7 +41,7 @@ const SearchedMovies = () => {
       }
 
       const items = await response.json();
-      
+
       if (!items || !items['Search']) {
         alert("No results for that search term");
         setSearchInput('');
@@ -67,7 +63,7 @@ const SearchedMovies = () => {
   const handleSaveMovie = async (movieID) => {
     if (savedMovieIds.length >= 5) {
       alert("You can only have 5 nominees!");
-      return;
+      return false;
     }
 
     const movieToSave = searchedMovies.find(
@@ -82,13 +78,18 @@ const SearchedMovies = () => {
           movieID: movieToSave.movieID,
         },
       });
+      saveMovieIds([...savedMovieIds, movieToSave.movieID]);
+
     } catch (err) {
       console.error(err);
     }
     setSavedMovieIds([...savedMovieIds, movieToSave.movieID]);
   };
+  const clearSearch = () => {
+    setSearchInput('');
+    setSearchedMovies([]);
+  }
 
-  // const newLocal = searchedMovies.length || savedMovieIds.length;
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
@@ -110,16 +111,24 @@ const SearchedMovies = () => {
                 <Button type="submit" variant="success" size="lg">
                   Submit Search
                 </Button>
+                <Button type="button" variant="success" size="lg" onClick={() => clearSearch()}>
+                  Clear Search
+                </Button>
               </Col>
             </Form.Row>
           </Form>
         </Container>
       </Jumbotron>
 
-      {(!searchedMovies.length ) ? null :
-        <section className="shoppie-container">
+      {(show) ? <AlertModal onClose={() => setShow(false)} show={show}>
+        <p>Please enter a search term!</p>
+      </AlertModal> : null
+      }
+
+      <section className="shoppie-container">
+        {(!searchedMovies.length) ? null :
           <Container className="result-container">
-          <h2>Results for '{searchInput}'</h2>
+            <h2>Results for '{searchInput}'</h2>
             <Card>
               <ListGroup variant="flush">
                 {searchedMovies.map((movie) => {
@@ -144,14 +153,15 @@ const SearchedMovies = () => {
               </ListGroup>
             </Card>
           </Container>
-          
-          {/* pass setter function as prop to child so state can be updated from child */}
+        }
+        {/* pass setter function as prop to child so state can be updated from child */}
+        {(!savedMovieIds.length) ? null :
           <SavedMovies
             newMovieIds={savedMovieIds}
             setSavedMovieIds={setSavedMovieIds}
           />
-        </section>
-      }
+        }
+      </section>
       {/* need better error handling */}
       {error && <h2>Oops!</h2>}
     </>

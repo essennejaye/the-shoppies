@@ -26,5 +26,5 @@ export const getSavedMovieIds = () => {
     const updatedSavedMovieIds = savedMovieIds?.filter((savedMovieId) => savedMovieId !== movieID);
     localStorage.setItem('saved_movies', JSON.stringify(updatedSavedMovieIds));
   
-    return true;
+    return updatedSavedMovieIds;
   };
