@@ -20,14 +20,16 @@ const SearchedMovies = () => {
   const [searchedMovies, setSearchedMovies] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [savedMovieIds, setSavedMovieIds] = useState(getSavedMovieIds());
-  const [saveMovie, { error }] = useMutation(SAVE_MOVIE);
+  const [saveMovie] = useMutation(SAVE_MOVIE);
   const [show, setShow] = useState(false);
+  const [message, setMessage] = useState('')
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     if (!searchInput) {
       setShow(true);
+      setMessage('Please enter a search term!');
       return false;
     }
 
@@ -37,13 +39,15 @@ const SearchedMovies = () => {
         `http://www.omdbapi.com/?s=${searchInput}&apikey=${key}`
       );
       if (!response.ok) {
-        throw new Error("Oops, something went wrong");
+        setShow(true);
+        setMessage(`Internal server error.\n Please try again!`);
       }
 
       const items = await response.json();
 
       if (!items || !items['Search']) {
-        alert("No results for that search term");
+        setShow(true);
+        setMessage(`We're sorry.\nThere were no selections found with that search term!\nPlease try again.`)
         setSearchInput('');
         return false;
       }
@@ -56,13 +60,14 @@ const SearchedMovies = () => {
       }));
       setSearchedMovies(movieData);
     } catch (err) {
-      console.error(err);
+      console.error("Problem: " + err.response);
     }
   };
 
   const handleSaveMovie = async (movieID) => {
     if (savedMovieIds.length >= 5) {
-      alert("You can only have 5 nominees!");
+      setShow(true);
+      setMessage("You can only nominate 5 selections!");
       return false;
     }
 
@@ -81,7 +86,7 @@ const SearchedMovies = () => {
       saveMovieIds([...savedMovieIds, movieToSave.movieID]);
 
     } catch (err) {
-      console.error(err);
+      console.error("Problem: " + err.response);
     }
     setSavedMovieIds([...savedMovieIds, movieToSave.movieID]);
   };
@@ -121,7 +126,7 @@ const SearchedMovies = () => {
       </Jumbotron>
 
       {(show) ? <AlertModal onClose={() => setShow(false)} show={show}>
-        <p>Please enter a search term!</p>
+        <p>{message}</p>
       </AlertModal> : null
       }
 
@@ -162,8 +167,6 @@ const SearchedMovies = () => {
           />
         }
       </section>
-      {/* need better error handling */}
-      {error && <h2>Oops!</h2>}
     </>
   );
 };

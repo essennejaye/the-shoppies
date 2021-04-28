@@ -76,6 +76,9 @@ h6 {
   font-size: 20px;
   font-weight: 700;
 }
+.modal-body p {
+  white-space: pre-wrap;
+}
 .btn-close {
   color: white;
   float: right;

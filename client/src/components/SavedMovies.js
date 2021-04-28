@@ -37,7 +37,7 @@ const SavedMovies = (props) => {
       removeMovieId(movieID);
       return props.setSavedMovieIds(getSavedMovieIds());
     } catch (err) {
-      console.error(err);
+      console.error("Problem: " + err);
     }
   };
 
@@ -51,7 +51,7 @@ const SavedMovies = (props) => {
         <Container className="nominee-container">
           <h2>
             {movieData.length
-              ? `the  ${movieData.length === 1 ? ' Nominee is:' : 'Nominees are:'}`
+              ? `the ${movieData.length === 1 ? 'Nominee is:' : 'Nominees are:'}`
               : `Nominees Please!`}
           </h2>
           <Card>
@@ -65,14 +65,11 @@ const SavedMovies = (props) => {
                       onClick={() => {
                         (handleRemoveMovie(movie._id, movie.movieID));
                       }}
-                      // onClick={async () => {
-                      //   await (handleRemoveMovie(movie._id, movie.movieID));
-                      // }}
                       variant="outline-danger"
                     >
                       Remove
-                </Button>
-                  </ListGroupItem>
+                    </Button>
+                 </ListGroupItem>
                 );
               })}
               <></>
