@@ -100,6 +100,7 @@ const SearchedMovies = () => {
   return (
     <>
       <Jumbotron fluid className="bg-image">
+        <img src='../src/images/movies.png' alt='movie clipart' />
         <div className='transbox'>
           <h1 className='title'>The Shoppies</h1>
         </div>
@@ -119,17 +120,17 @@ const SearchedMovies = () => {
               />
             </Col>
             <Col xs={12} md={4} className='form-btn'>
-              <Button 
-                type="submit" 
-                variant="success" 
+              <Button
+                type="submit"
+                variant="success"
                 size="lg"
               >
                 Submit Search
               </Button>
-              <Button 
-                type="button" 
-                variant="info" 
-                size="lg" 
+              <Button
+                type="button"
+                variant="info"
+                size="lg"
                 onClick={() => clearSearch()}
               >
                 Clear Search

@@ -13,30 +13,21 @@ h5,
 h6 {
   font-family: "Rubik Mono One", sans-serif;
 }
-.bg-image {
-  margin-top: 5px;
+.bg-image.jumbotron.jumbotron-fluid {
+  /* margin-top: 5px;
   position: relative;
-  background-image: url("../src/images/shoppie_img3.png");
+  background-image: url("../src/images/movies.png");
   background-repeat: round;
   display: flex;
   justify-content: center;
   width: 100%;
-  box-shadow: 0px 10px 15px rgba(218, 165, 32, 0.4);
+  height: 120px; */
+  background-color: transparent;
 }
-.bg-image::before {
-  content: "";
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  background-color: rgba(0, 0, 0, 0.25);
-}
-
 .transbox {
   margin: 10px;
   background-color: rgba(0, 0, 0, 0.4);
-  border: 1px solid green;
+  border: 1px solid #ffda1f;
   border-radius: 5px;
   width: 100%;
 }
