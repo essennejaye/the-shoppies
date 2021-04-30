@@ -5,6 +5,7 @@ import {
   Card,
   ListGroupItem,
   ListGroup,
+  Image
 } from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { REMOVE_MOVIE } from "../utils/mutations";
@@ -48,7 +49,7 @@ const SavedMovies = (props) => {
   return (
     <>
       {!movieData.length ? null :
-        <Container className="nominee-container">
+        <Container className="nominee-container column">
           <h2>
             {movieData.length
               ? `the ${movieData.length === 1 ? 'Nominee is:' : 'Nominees are:'}`
@@ -59,13 +60,18 @@ const SavedMovies = (props) => {
               {movieData.map((movie) => {
                 return (
                   <ListGroupItem key={movie.movieID}>
-                    {`Title: ${movie.title} (${movie.year})`}
+                  <Image src={movie.image} />
+                      <div className='info'>
+                        <h5 className='title'>{`Title: ${movie.title}`}</h5>
+                        <p className='description'>{`Released: ${movie.year}`}</p>
+                      </div>
                     <Button
-                      className="btn-block, btn-info"
+                      className="mb-2 remove-btn"
                       onClick={() => {
                         (handleRemoveMovie(movie._id, movie.movieID));
                       }}
                       variant="outline-danger"
+                      size='sm'
                     >
                       Remove
                     </Button>

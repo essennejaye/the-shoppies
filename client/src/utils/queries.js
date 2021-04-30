@@ -6,6 +6,7 @@ export const QUERY_MOVIES = gql`
         _id
         title
         year
+        image
         movieID
     }
 }

@@ -7,7 +7,8 @@ import {
   Card,
   Col,
   ListGroupItem,
-  ListGroup
+  ListGroup,
+  Image
 } from "react-bootstrap";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_MOVIE } from "../utils/mutations";
@@ -21,14 +22,14 @@ const SearchedMovies = () => {
   const [searchInput, setSearchInput] = useState("");
   const [savedMovieIds, setSavedMovieIds] = useState(getSavedMovieIds());
   const [saveMovie] = useMutation(SAVE_MOVIE);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState('');
   const [message, setMessage] = useState('')
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     if (!searchInput) {
-      setShow(true);
+      setShow('show');
       setMessage('Please enter a search term!');
       return false;
     }
@@ -39,14 +40,13 @@ const SearchedMovies = () => {
         `http://www.omdbapi.com/?s=${searchInput}&apikey=${key}`
       );
       if (!response.ok) {
-        setShow(true);
+        setShow('show');
         setMessage(`Internal server error.\n Please try again!`);
       }
 
       const items = await response.json();
-
       if (!items || !items['Search']) {
-        setShow(true);
+        setShow('show');
         setMessage(`We're sorry.\nThere were no selections found with that search term!\nPlease try again.`)
         setSearchInput('');
         return false;
@@ -57,6 +57,7 @@ const SearchedMovies = () => {
         movieID: movie.imdbID,
         title: movie.Title,
         year: movie.Year,
+        image: movie.Poster,
       }));
       setSearchedMovies(movieData);
     } catch (err) {
@@ -66,7 +67,7 @@ const SearchedMovies = () => {
 
   const handleSaveMovie = async (movieID) => {
     if (savedMovieIds.length >= 5) {
-      setShow(true);
+      setShow('show');
       setMessage("You can only nominate 5 selections!");
       return false;
     }
@@ -80,6 +81,7 @@ const SearchedMovies = () => {
         variables: {
           title: movieToSave.title,
           year: movieToSave.year,
+          image: movieToSave.image,
           movieID: movieToSave.movieID,
         },
       });
@@ -97,58 +99,75 @@ const SearchedMovies = () => {
 
   return (
     <>
-      <Jumbotron fluid className="text-light bg-dark">
-        <Container>
-          <h1>The Shoppies</h1>
-          <Form onSubmit={handleFormSubmit}>
-            <Form.Row>
-              <Col xs={12} md={8}>
-                <Form.Control
-                  name="searchInput"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  type="text"
-                  size="lg"
-                  placeholder="Search for a movie"
-                />
-              </Col>
-              <Col xs={12} md={4}>
-                <Button type="submit" variant="success" size="lg">
-                  Submit Search
-                </Button>
-                <Button type="button" variant="success" size="lg" onClick={() => clearSearch()}>
-                  Clear Search
-                </Button>
-              </Col>
-            </Form.Row>
-          </Form>
-        </Container>
+      <Jumbotron fluid className="bg-image">
+        <div className='transbox'>
+          <h1 className='title'>The Shoppies</h1>
+        </div>
       </Jumbotron>
+      <Container className='form-submit'>
+        <Form onSubmit={handleFormSubmit}>
+          <Form.Row>
+            <Col xs={12} md={8}>
+              <Form.Label>Search</Form.Label>
+              <Form.Control
+                name="searchInput"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                type="text"
+                size="lg"
+                placeholder="Search for a movie or tv series by name"
+              />
+            </Col>
+            <Col xs={12} md={4} className='form-btn'>
+              <Button 
+                type="submit" 
+                variant="success" 
+                size="lg"
+              >
+                Submit Search
+              </Button>
+              <Button 
+                type="button" 
+                variant="info" 
+                size="lg" 
+                onClick={() => clearSearch()}
+              >
+                Clear Search
+              </Button>
+            </Col>
+          </Form.Row>
+        </Form>
+      </Container>
 
-      {(show) ? <AlertModal onClose={() => setShow(false)} show={show}>
+      {(show) ? <AlertModal onClose={() => setShow('hide')} show={show} setShow={setShow}>
         <p>{message}</p>
       </AlertModal> : null
       }
-
-      <section className="shoppie-container">
+      <section className="shoppie-container row">
         {(!searchedMovies.length) ? null :
-          <Container className="result-container">
-            <h2>Results for '{searchInput}'</h2>
+
+          <Container className="result-container column">
+            <h2>Results for: {searchInput}</h2>
             <Card>
               <ListGroup variant="flush">
                 {searchedMovies.map((movie) => {
                   return (
                     <ListGroupItem key={movie.movieID}>
-                      {`Title: ${movie.title} (${movie.year})`}
+                      <Image src={movie.image} />
+                      <div className='info'>
+                        <h5 className='title'>{`Title: ${movie.title}`}</h5>
+                        <p className='description'>{`Released: ${movie.year}`}</p>
+                      </div>
                       <Button
                         disabled={savedMovieIds?.some(
                           (savedID) => savedID === movie.movieID
                         )}
-                        className="btn-block, btn-info"
+                        className="mb-2 result-btn"
                         onClick={() => {
                           handleSaveMovie(movie.movieID);
                         }}
-                        variant="primary"
+                        variant="outline-success"
+                        size='sm'
                       >
                         Nominate
                       </Button>
@@ -159,7 +178,6 @@ const SearchedMovies = () => {
             </Card>
           </Container>
         }
-        {/* pass setter function as prop to child so state can be updated from child */}
         {(!savedMovieIds.length) ? null :
           <SavedMovies
             newMovieIds={savedMovieIds}

@@ -5,6 +5,7 @@ type Movies {
     _id: ID!
     title: String!
     year: String!
+    image: String
     movieID: String!
 }
 
@@ -13,7 +14,7 @@ type Query {
 }
 
 type Mutation {
-    saveMovie(title: String!, year: String!, movieID: String!): Movies
+    saveMovie(title: String!, year: String!, image: String, movieID: String!): Movies
     removeMovie(_id: ID!): Movies
 }
 `;

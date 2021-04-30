@@ -1,10 +1,20 @@
-import React from "react";
-import {FaTimes} from 'react-icons/fa';
+import React, { useEffect } from "react";
+import { FaTimes } from 'react-icons/fa';
 
 const AlertModal = (props) => {
+  useEffect(() => {
+    return () => {
+      let modal = document.querySelector('.modal-background');
+      if (modal && modal.classList.contains('hide')) {
+        setTimeout(() => {
+          props.setShow('')
+        }, 450)
+      }
+    }
+  })
   return (
-    <div className={`modal-background ${props.show ? 'show' : ' '}`}>
-      <div className="modal-container">
+    <div className={`modal-background ${props.show}`}>
+      <div className={`modal-container ${props.show}`}>
         <div className="modal-header">
           <h5 className="modal-title">Oops!</h5>
           <button
@@ -15,7 +25,7 @@ const AlertModal = (props) => {
           ><FaTimes></FaTimes></button>
         </div>
         <div className="modal-body">
-        {props.children}
+          {props.children}
         </div>
         <div className="modal-foot">
           <button className="btn btn-close-secondary" onClick={props.onClose}>
