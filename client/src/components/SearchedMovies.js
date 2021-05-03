@@ -1,15 +1,4 @@
 import React, { useState } from "react";
-import {
-  Jumbotron,
-  Container,
-  Button,
-  Form,
-  Card,
-  Col,
-  ListGroupItem,
-  ListGroup,
-  Image
-} from "react-bootstrap";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_MOVIE } from "../utils/mutations";
 import { saveMovieIds, getSavedMovieIds } from "../utils/localStorage";
@@ -99,85 +88,92 @@ const SearchedMovies = () => {
 
   return (
     <>
-      <Jumbotron fluid className="bg-image">
-        <img src='../src/images/movies.png' alt='movie clipart' />
-        <div className='transbox'>
-          <h1 className='title'>The Shoppies</h1>
-        </div>
-      </Jumbotron>
-      <Container className='form-submit'>
-        <Form onSubmit={handleFormSubmit}>
-          <Form.Row>
-            <Col xs={12} md={8}>
-              <Form.Label>Search</Form.Label>
-              <Form.Control
-                name="searchInput"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                type="text"
-                size="lg"
-                placeholder="Search for a movie or tv series by name"
-              />
-            </Col>
-            <Col xs={12} md={4} className='form-btn'>
-              <Button
-                type="submit"
-                variant="success"
-                size="lg"
-              >
-                Submit Search
-              </Button>
-              <Button
-                type="button"
-                variant="info"
-                size="lg"
-                onClick={() => clearSearch()}
-              >
-                Clear Search
-              </Button>
-            </Col>
-          </Form.Row>
-        </Form>
-      </Container>
+      <section className="bg-image">
+        <h1 className='title'>The Shoppies</h1>
+        <img className='hero-img' src='./movies.png' alt='movie themed clipart' />
+      </section>
+      <section className='form-container'>
+        <form className='form-submit' onSubmit={handleFormSubmit}>
+          <div className='form-label'>
+            <label htmlFor='searchInput'>
+              <h6>Search</h6>
+            </label>
+          </div>
+          <div className='input-form'>
+            <input
+              name="searchInput"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              type="text"
+              size="lg"
+              placeholder="Search for a movie or tv series by name"
+            />
+          </div>
+          <div className='form-btns'>
+            <button
+              className='form-searchBtn btn'
+              type="submit"
+              variant="success"
+              size="lg"
+            >
+              Submit Search
+              </button>
+            <button
+              className='form-clearBtn btn'
+              type="button"
+              variant="info"
+              size="lg"
+              onClick={() => clearSearch()}
+            >
+              Clear Search
+              </button>
+          </div>
+        </form>
+      </section>
 
       {(show) ? <AlertModal onClose={() => setShow('hide')} show={show} setShow={setShow}>
         <p>{message}</p>
       </AlertModal> : null
       }
+      {(searchedMovies.length || savedMovieIds.length) ?
+        <div className='zoom-text'>
+          <p >
+            Mouse over (or touch on mobile device) posters to enlarge.
+              </p>
+        </div>
+        : null
+      }
       <section className="shoppie-container row">
         {(!searchedMovies.length) ? null :
-
-          <Container className="result-container column">
+          <section className="result-container column">
             <h2>Results for: {searchInput}</h2>
-            <Card>
-              <ListGroup variant="flush">
-                {searchedMovies.map((movie) => {
-                  return (
-                    <ListGroupItem key={movie.movieID}>
-                      <Image src={movie.image} />
-                      <div className='info'>
-                        <h5 className='title'>{`Title: ${movie.title}`}</h5>
-                        <p className='description'>{`Released: ${movie.year}`}</p>
-                      </div>
-                      <Button
-                        disabled={savedMovieIds?.some(
-                          (savedID) => savedID === movie.movieID
-                        )}
-                        className="mb-2 result-btn"
-                        onClick={() => {
-                          handleSaveMovie(movie.movieID);
-                        }}
-                        variant="outline-success"
-                        size='sm'
-                      >
-                        Nominate
-                      </Button>
-                    </ListGroupItem>
-                  );
-                })}
-              </ListGroup>
-            </Card>
-          </Container>
+            <section className='list-group'>
+              {searchedMovies.map((movie) => {
+                return (
+                  <div className='list-group-item' key={movie.movieID}>
+                    <img className='group-img' src={movie.image} alt='movie poster' />
+                    <div className='info'>
+                      <h5 className='title'>{`Title: ${movie.title}`}</h5>
+                      <p className='description'>{`Released: ${movie.year}`}</p>
+                    </div>
+                    <button
+                      disabled={savedMovieIds?.some(
+                        (savedID) => savedID === movie.movieID
+                      )}
+                      className="result-btn btn"
+                      onClick={() => {
+                        handleSaveMovie(movie.movieID);
+                      }}
+                      variant="outline-success"
+                      size='sm'
+                    >
+                      Nominate
+                      </button>
+                  </div>
+                );
+              })}
+            </section>
+          </section>
         }
         {(!savedMovieIds.length) ? null :
           <SavedMovies

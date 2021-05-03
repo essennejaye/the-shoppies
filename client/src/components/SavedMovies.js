@@ -1,12 +1,4 @@
 import React, { useEffect } from "react";
-import {
-  Container,
-  Button,
-  Card,
-  ListGroupItem,
-  ListGroup,
-  Image
-} from "react-bootstrap";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { REMOVE_MOVIE } from "../utils/mutations";
 import { QUERY_MOVIES } from "../utils/queries";
@@ -49,24 +41,23 @@ const SavedMovies = (props) => {
   return (
     <>
       {!movieData.length ? null :
-        <Container className="nominee-container column">
+        <section className="nominee-container column">
           <h2>
             {movieData.length
               ? `the ${movieData.length === 1 ? 'Nominee is:' : 'Nominees are:'}`
               : `Nominees Please!`}
           </h2>
-          <Card>
-            <ListGroup variant="flush">
+            <section className='list-group'>
               {movieData.map((movie) => {
                 return (
-                  <ListGroupItem key={movie.movieID}>
-                  <Image src={movie.image} />
+                  <section className='list-group-item' key={movie.movieID}>
+                  <img className='group-img' src={movie.image} alt='movie poster' />
                       <div className='info'>
                         <h5 className='title'>{`Title: ${movie.title}`}</h5>
                         <p className='description'>{`Released: ${movie.year}`}</p>
                       </div>
-                    <Button
-                      className="mb-2 remove-btn"
+                    <button
+                      className="btn remove-btn"
                       onClick={() => {
                         (handleRemoveMovie(movie._id, movie.movieID));
                       }}
@@ -74,14 +65,13 @@ const SavedMovies = (props) => {
                       size='sm'
                     >
                       Remove
-                    </Button>
-                 </ListGroupItem>
+                    </button>
+                 </section>
                 );
               })}
               <></>
-            </ListGroup>
-          </Card>
-        </Container>
+            </section>
+        </section>
       }
     </>
   );
