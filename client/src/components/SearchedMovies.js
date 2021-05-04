@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_MOVIE } from "../utils/mutations";
 import { saveMovieIds, getSavedMovieIds } from "../utils/localStorage";
@@ -13,6 +13,12 @@ const SearchedMovies = () => {
   const [saveMovie] = useMutation(SAVE_MOVIE);
   const [show, setShow] = useState('');
   const [message, setMessage] = useState('');
+
+  const inputEl = useRef();
+
+  useEffect(() => {
+    inputEl.current.focus();
+  });
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -104,8 +110,10 @@ const SearchedMovies = () => {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               type="text"
-              size="lg"
+              // size="lg"
               placeholder="Search for a movie or tv show by name"
+              autoFocus={true}
+              ref={inputEl}
             />
           </div>
           <div className='form-btns'>

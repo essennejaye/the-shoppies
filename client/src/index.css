@@ -37,7 +37,7 @@ h6 {
 .bg-image {
   display: flex;
   justify-content: space-evenly;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem 0.5rem 1rem;
   border-bottom: 1px solid var(--clr-primary);
 }
 h1.title {
@@ -51,13 +51,13 @@ h1.title {
 .hero-img {
   display: flex;
 }
+
 /* search form */
 .form-container {
   display: flex;
   justify-content: center;
   margin: 20px 0px;
 }
-
 .form-submit {
   display: flex;
   flex-direction: column;
@@ -175,6 +175,7 @@ h5.title {
   margin: 5px 0;
   font-size: 16px;
 }
+/* poster image  and list buttons*/
 .group-img {
   position: absolute;
   top: 13px;
@@ -190,7 +191,6 @@ h5.title {
   height: 400px;
   z-index: 5;
 }
-
 .result-btn,
 .remove-btn {
   float: right;
@@ -212,7 +212,7 @@ h5.title {
 .remove-btn:hover {
   background-color: var(--clr-red);
 }
-
+/* modal */
 .modal-background {
   position: fixed;
   left: 0;
@@ -231,7 +231,6 @@ h5.title {
 .modal-background.hide {
   animation: fadeout 0.5s;
 }
-
 .modal-container {
   position: relative;
   width: 500px;
@@ -248,8 +247,7 @@ h5.title {
 .modal-container.show {
   animation: animatein 0.5s;
 }
-
-/* Add animation */
+/* Add animation for modal*/
 @keyframes animatein {
   from {
     top: -300px;
@@ -286,7 +284,6 @@ h5.title {
     opacity: 1;
   }
 }
-
 .modal-header,
 .modal-foot {
   display: flex;
@@ -330,6 +327,7 @@ h5.title {
   text-decoration: none;
   cursor: pointer;
 }
+
 /* Media queries */
 @media only screen and (max-width: 1024px) {
   .bg-image {
@@ -396,6 +394,7 @@ h5.title {
     right: -4px;
   }
 }
+
 @media only screen and (max-width: 770px) {
   h1.title {
     font-size: 80px;
@@ -406,6 +405,7 @@ h5.title {
     align-self: center;
   }
 }
+
 @media screen and (max-width: 600px) {
   .bg-image {
     flex-direction: column;
@@ -477,6 +477,7 @@ h5.title {
     width: 55%;
   }
 }
+
 @media screen and (max-width: 300px) {
   h1.title {
     font-size: 50px;
