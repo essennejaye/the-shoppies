@@ -12,7 +12,7 @@ const SearchedMovies = () => {
   const [savedMovieIds, setSavedMovieIds] = useState(getSavedMovieIds());
   const [saveMovie] = useMutation(SAVE_MOVIE);
   const [show, setShow] = useState('');
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -75,7 +75,6 @@ const SearchedMovies = () => {
         },
       });
       saveMovieIds([...savedMovieIds, movieToSave.movieID]);
-
     } catch (err) {
       console.error("Problem: " + err.response);
     }
@@ -106,7 +105,7 @@ const SearchedMovies = () => {
               onChange={(e) => setSearchInput(e.target.value)}
               type="text"
               size="lg"
-              placeholder="Search for a movie or tv series by name"
+              placeholder="Search for a movie or tv show by name"
             />
           </div>
           <div className='form-btns'>
@@ -138,7 +137,7 @@ const SearchedMovies = () => {
       {(searchedMovies.length || savedMovieIds.length) ?
         <div className='zoom-text'>
           <p >
-            Mouse over (or touch on mobile device) posters to enlarge.
+            Roll over image to enlarge.
               </p>
         </div>
         : null
