@@ -212,6 +212,25 @@ h5.title {
 .remove-btn:hover {
   background-color: var(--clr-red);
 }
+.footer {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px;
+  color: var(--clr-primary);
+  font-size: 18px;
+  align-items: center;
+}
+.name-date {
+  font-weight: 600;
+}
+.icon-img {
+  display: flex;
+  justify-content: space-between;
+}
+.icon-img img {
+  margin: 0px 10px;
+  opacity: 0.8;
+}
 /* modal */
 .modal-background {
   position: fixed;

@@ -95,7 +95,7 @@ const SearchedMovies = () => {
     <>
       <section className="bg-image">
         <h1 className='title'>The Shoppies</h1>
-        <img className='hero-img' src='./movies.png' alt='movie themed clipart' />
+        <img className='hero-img' src='../images1/movies.png' alt='movie themed clipart' />
       </section>
       <section className='form-container'>
         <form className='form-submit' onSubmit={handleFormSubmit}>

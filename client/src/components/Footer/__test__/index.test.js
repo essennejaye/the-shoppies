@@ -1,18 +1,18 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import AlertModal from '..';
+import Footer from '..';
 
 afterEach(cleanup);
 
-describe('AlertModal component', () => {
+describe('Footer component', () => {
   // First test
   it('renders', () => {
-    render(<AlertModal />);
+    render(<Footer />);
   });
   // Second test
   it('matches snapshot DOM node structure', () => {
-    const { asFragment } = render(<AlertModal />);
+    const { asFragment } = render(<Footer />);
     expect(asFragment()).toMatchSnapshot();
   })
 })
