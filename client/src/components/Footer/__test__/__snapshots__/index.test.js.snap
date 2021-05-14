@@ -9,7 +9,12 @@ exports[`Footer component matches snapshot DOM node structure 1`] = `
       class="name-date"
     >
       <p>
-        Essennejaye © 2021
+        Essennejaye © 
+        <span
+          data-testid="currentYear"
+        >
+          2021
+        </span>
       </p>
     </div>
     <div
@@ -19,7 +24,7 @@ exports[`Footer component matches snapshot DOM node structure 1`] = `
         href="https://github.com/essennejaye"
       >
         <img
-          alt="github icon"
+          alt="github-icon"
           src="../images1/github-32px.png"
         />
       </a>
@@ -27,7 +32,7 @@ exports[`Footer component matches snapshot DOM node structure 1`] = `
         href="https://www.linkedin.com/in/satalia-n-jefferson"
       >
         <img
-          alt="linkedin icon"
+          alt="linkedin-icon"
           src="../images1/linkedin-32px.png"
         />
       </a>
