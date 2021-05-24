@@ -32,7 +32,7 @@ const SearchedMovies = () => {
     const key = process.env.REACT_APP_API_KEY;
     try {
       const response = await fetch(
-        `http://www.omdbapi.com/?s=${searchInput}&apikey=${key}`
+        `https://www.omdbapi.com/?s=${searchInput}&apikey=${key}`
       );
       if (!response.ok) {
         setShow('show');
