@@ -15,19 +15,19 @@ describe("Footer component", () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it("displays name, copyright symbol", () => {
+  it("inserts name, copyright symbol", () => {
     render(<Footer currentYear={getCurrentYear} />);
     expect(screen.getByText(/Essennejaye ©/)).toBeInTheDocument();
   });
 
-  it("should render current year", () => {
+  it("inserts current year", () => {
     render(<Footer />);
     expect(screen.getByTestId("currentYear")).toHaveTextContent(
       `${getCurrentYear().getFullYear()}`
     );
   });
 
-  it("renders icons", () => {
+  it("inserts icons", () => {
     render(<Footer currentYear={getCurrentYear} />);
     const githubIconImg = screen.getByAltText("github-icon");
     const linkedinIconImg = screen.getByAltText("linkedin-icon");
