@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchedMovies component matches snapshot DOM node structure 1`] = `
+<DocumentFragment>
+  <section
+    class="bg-image"
+  >
+    <h1
+      class="title"
+    >
+      The Shoppies
+    </h1>
+    <img
+      alt="movie themed clipart"
+      class="hero-img"
+      src="../images1/movies.png"
+    />
+  </section>
+  <section
+    class="form-container"
+  >
+    <form
+      class="form-submit"
+    >
+      <div
+        class="form-label"
+      >
+        <label
+          for="searchInput"
+        >
+          <h6>
+            Search
+          </h6>
+        </label>
+      </div>
+      <div
+        class="input-form"
+      >
+        <input
+          name="searchInput"
+          placeholder="Search for a movie or tv show by name"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="form-btns"
+      >
+        <button
+          class="form-searchBtn btn"
+          type="submit"
+          variant="success"
+        >
+          Submit Search
+        </button>
+        <button
+          class="form-clearBtn btn"
+          type="button"
+          variant="info"
+        >
+          Clear Search
+        </button>
+      </div>
+    </form>
+  </section>
+  <section
+    class="shoppie-container row"
+  />
+</DocumentFragment>
+`;

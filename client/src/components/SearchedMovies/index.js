@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_MOVIE } from "../../utils/mutations";
 import { saveMovieIds, getSavedMovieIds } from "../../utils/localStorage";
+import { searchMovie } from '../../utils/movieSearch';
 import SavedMovies from "../SavedMovies";
 import AlertModal from "../AlertModal";
 
