@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_MOVIE } from "../../utils/mutations";
 import { saveMovieIds, getSavedMovieIds } from "../../utils/localStorage";
-import { searchMovie } from '../../utils/movieSearch';
+import { movieFetch } from '../../utils/movieFetch/index';
 import SavedMovies from "../SavedMovies";
 import AlertModal from "../AlertModal";
 
@@ -23,32 +23,14 @@ const SearchedMovies = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
     if (!searchInput) {
-      setShow('show');
-      setMessage('Please enter a search term!');
-      return false;
+      let errorMessage = ('Please enter a search term!');
+      callAlertModal(errorMessage);
+      return;
     }
-
-    const apiKey = process.env.REACT_APP_API_KEY;
+    const results = await movieFetch(searchInput);
     try {
-      const response = await fetch(
-        `https://www.omdbapi.com/?s=${searchInput}&apikey=${apiKey}`
-      );
-      if (!response.ok) {
-        setShow('show');
-        setMessage(`Internal server error.\n Please try again!`);
-      }
-
-      const items = await response.json();
-      if (!items || !items['Search']) {
-        setShow('show');
-        setMessage(`We're sorry.\nThere were no selections found with that search term!\nPlease try again.`)
-        setSearchInput('');
-        return false;
-      }
-
-      const movies = items.Search;
+      const movies = results;
       const movieData = movies.map((movie) => ({
         movieID: movie.imdbID,
         title: movie.Title,
@@ -57,21 +39,21 @@ const SearchedMovies = () => {
       }));
       setSearchedMovies(movieData);
     } catch (err) {
-      console.error("Problem: " + err.response);
+      setSearchInput('');
+      let errorMessage = (results);
+      callAlertModal(errorMessage);
     }
   };
 
   const handleSaveMovie = async (movieID) => {
     if (savedMovieIds.length >= 5) {
-      setShow('show');
-      setMessage("You can only nominate 5 selections!");
-      return false;
+      let errorMessage = "You can only nominate 5 selections!";
+      callAlertModal(errorMessage);
+      return;
     }
-
     const movieToSave = searchedMovies.find(
       (movie) => movie.movieID === movieID
     );
-
     try {
       await saveMovie({
         variables: {
@@ -84,12 +66,20 @@ const SearchedMovies = () => {
       saveMovieIds([...savedMovieIds, movieToSave.movieID]);
     } catch (err) {
       console.error("Problem: " + err.response);
+      let errorMessage = "Your movie was not saved!";
+      callAlertModal(errorMessage);
     }
     setSavedMovieIds([...savedMovieIds, movieToSave.movieID]);
   };
+
   const clearSearch = () => {
     setSearchInput('');
     setSearchedMovies([]);
+  }
+
+  const callAlertModal = (errorMessage) => {
+    setShow('show');
+    setMessage(errorMessage);
   }
 
   return (

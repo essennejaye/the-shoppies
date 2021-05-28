@@ -27,7 +27,7 @@ describe('AlertModal component', () => {
     const closeBtn = screen.getByText(/close/i)
     userEvent.click(closeBtnIcon);
     userEvent.click(closeBtn);
-    screen.debug();
+    // screen.debug();
     // Assert
     expect(handleClose).toHaveBeenCalledTimes(2);
   });

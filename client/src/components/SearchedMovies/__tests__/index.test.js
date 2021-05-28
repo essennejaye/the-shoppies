@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 import SearchedMovies from '..';
 import { MockedProvider } from '@apollo/client/testing';
 
-beforeAll(() => jest.spyOn(window, 'fetch'))
+// beforeAll(() => jest.spyOn(window, 'fetch'))
 
 // const mocks = [];
 describe('SearchedMovies component', () => {
@@ -36,7 +36,7 @@ describe('SearchedMovies component', () => {
     );
     userEvent.click(screen.getByRole('button', { name: /submit search/i }))
     expect(screen.getByText('Please enter a search term!')).toBeInTheDocument()
-    screen.debug();
+    // screen.debug();
   });
 
   // it('renders modal error alert for invalid input field', async () => {
